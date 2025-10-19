@@ -1,16 +1,24 @@
 const express = require('express')
-const {adminAuth} = require('./middlewares/auth.js')
+
 const app = express()
 
-app.use('/admin',adminAuth)
-
-app.get('/user',(req,res) => {
-    res.send("User Login");
+app.use("/",(err,req,res,next) =>{
+    if(err){
+        console.log("Checking error...")
+        res.status(500).send("Something went wrong")
+    }
 })
 
-app.get('/admin/getUserData',(req,res) => {
-    res.send("All Data sent");
+app.get("/user",(req,res) =>{
+    try{
+        throw new Error("hifsdjfknivdbfiishsdfh")       
+    }
+    catch(err){
+        res.send("Contact Support")
+    }
 })
+
+
 
 
 app.listen(3000,()=>{
