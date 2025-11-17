@@ -7,14 +7,14 @@ app.use(express.json()) //JSON -> JS object
 
 app.post('/signup', async (req, res) => {
 
-    console.log(req.body)
+    // console.log(req.body)
     const user = new User(req.body)
 
     try {
         await user.save()
         res.send("user Added Successfully!")
     } catch (err) {
-        res.status(404).send("Something went wrong")
+        res.status(404).send("signup FAILED"+ err.message)
     }
 })
 
@@ -65,10 +65,13 @@ app.patch('/user', async (req,res) => {
     const dataToupdate = req.body
 
     try{
-       await User.findByIdAndUpdate(userId,dataToupdate)
+       await User.findByIdAndUpdate(userId,dataToupdate,{
+        returnDocument: "after",
+        runValidators: true,
+       })
         res.send("User updated Successfully!")
     }catch(err){
-        res.status(400).send("Something went wrong")
+        res.status(400).send("UPDATE FAILED!"+ err.message)
     }
 })
 
