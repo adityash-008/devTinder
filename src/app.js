@@ -1,20 +1,68 @@
 const express = require("express")
 const dbConnect = require('./config/database')
-const app = express();
 const User = require("./models/user.js")
+const bcrypt = require('bcrypt')
+const validator = require('validator')
+const {validateSignUpData} = require('./utils/validation.js')
+
+const app = express();
 
 app.use(express.json()) //JSON -> JS object
 
+//Create a new User in DB
 app.post('/signup', async (req, res) => {
 
-    // console.log(req.body)
-    const user = new User(req.body)
-
     try {
+        validateSignUpData(req)
+    // console.log(req.body)
+    const {firstName,
+        lastName,
+        email,
+        password,
+        age,
+        gender,
+        about,
+        skills} = req.body
+
+        const hashPassword = await bcrypt.hash(password,10)
+        // console.log(hashPassword) Prints hashPassword 
+
+        const user = new User({
+        firstName,
+        lastName,
+        email,
+        password : hashPassword,
+        age,
+        gender,
+        about,
+        skills
+        })
+    
         await user.save()
         res.send("user Added Successfully!")
     } catch (err) {
-        res.status(404).send("signup FAILED"+ err.message)
+        res.status(404).send("Error: "+ err.message)
+    }
+})
+
+//Login API -> Takes email and password
+app.post('/login',async (req,res) =>{
+    try{
+        const {email, password} = req.body
+        if(!validator.isEmail(email)) throw new Error("Enter a valid E-mail Address!")
+        
+        const user = await User.findOne({email:email})
+        if(!user){
+            throw new Error("Invalid Credentials!")
+        }        
+        const isPasswordValid = await bcrypt.compare(password,user.password)
+        if(!isPasswordValid) throw new Error("Invalid Credentials!")
+        else{
+            res.status(200).send("Successfully LoggedIn")
+        }       
+
+    }catch(err){
+        res.status(400).send("ERROR: "+ err.message)
     }
 })
 
@@ -60,9 +108,15 @@ app.delete('/user', async (req,res) => {
 })
 
 //Update user API
-app.patch('/user', async (req,res) => {
-    const userId = req.body.userId
+app.patch('/user/:userId', async (req,res) => {
+    const userId = req.params?.userId
     const dataToupdate = req.body
+
+    const ALLOWED_UPDATES = ["photoUrl","about","skills"]
+    const isUpdateAllowed = Object.keys(dataToupdate).every((k) =>
+        ALLOWED_UPDATES.includes(k)
+    )
+    if(!isUpdateAllowed) res.status(400).send("Fields can't be Update!")
 
     try{
        await User.findByIdAndUpdate(userId,dataToupdate,{
@@ -83,7 +137,7 @@ dbConnect()
             console.log("listening on port No. 7777...")
         })
     })
-    .catch(() => {
-        console.log("Database Connection Failed")
+    .catch((err) => {
+        console.log("Database Connection Failed",err)
     })
 

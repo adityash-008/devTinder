@@ -1,9 +1,14 @@
 const mongoose = require('mongoose')
 
-const dbConnect = async () =>{
-await mongoose.connect(
-    'mongodb+srv://admin:admin7505@cluster0.hl08pbw.mongodb.net/devTinder'
-)
+const dbConnect = async () => {
+    try {
+        await mongoose.connect(
+            'mongodb://127.0.0.1:27017/namasteNodeJS'
+        )
+    } catch(err) {
+        console.error("DB Connection Error:", err.message)
+        throw err
+    }
 }
 
 module.exports = dbConnect
