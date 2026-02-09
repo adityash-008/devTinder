@@ -10,8 +10,8 @@ const userAuth = async (req,res,next) =>{
     if(!token) throw new Error("Please Login Again!")
 
     //Validate the token 
-    const decodedMessage = await jwt.verify(token,"privateKey")
-    const {_id} = decodedMessage
+    const decodedData = await jwt.verify(token,"privateKey")
+    const {_id} = decodedData
     //Search the user
     const user = await User.findById(_id)
     if(!user) throw new Error("User not Found!")

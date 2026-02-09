@@ -58,7 +58,7 @@ const userschema = new mongoose.Schema({
     }
 },{timestamps: true})
 
- userschema.methods.getJWT = async function(){ //Do not use => function because of this
+ userschema.methods.getJWT = async function(){ //Do not use => function because of "this"
     const user = this
 
     const token = await jwt.sign({_id:user._id},"privateKey",{expiresIn: "7d"})
