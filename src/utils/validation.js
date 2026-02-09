@@ -15,8 +15,13 @@ const validateSignUpData = (req) =>{
     
 }
 
-
+const validateEditProfileData = (req) =>{
+    const {email, password} = req.body;
+    if(email != undefined || password != undefined) throw new Error("Entered fields can't be updated!")
+    else return true;
+}
 
 module.exports = {
     validateSignUpData,
+    validateEditProfileData
 }

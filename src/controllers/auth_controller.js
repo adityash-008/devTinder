@@ -37,6 +37,7 @@ async function userSignUp(req,res){
     }
 }
 
+// login - API
 async function userLogIn(req,res){
     try {
         const {email,password} = req.body
@@ -60,4 +61,14 @@ async function userLogIn(req,res){
     }
 }
 
-module.exports = {userSignUp,userLogIn}
+// logout - API
+async function userLogOut(req,res){
+    try {
+        res.cookie("token",null,{expires: new Date(Date.now())})
+        res.status(200).send("LoggedOut Successfully!");
+    } catch (err) {
+        res.status(400).send("ERROR: " + err.message)
+    }
+}
+
+module.exports = {userSignUp, userLogIn, userLogOut}

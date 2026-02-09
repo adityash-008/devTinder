@@ -1,10 +1,11 @@
 const express = require('express');
-const {viewUserProfile} = require('../controllers/profile_controller');
+const {viewUserProfile, editUserProfile} = require('../controllers/profile_controller');
 const {userAuth} = require('../middlewares/auth')
 
 const profileRouter = express.Router();
 
 profileRouter
-.get('/view',userAuth,viewUserProfile)
+.get('/view', userAuth, viewUserProfile)
+.patch('/edit', userAuth, editUserProfile)
 
 module.exports = profileRouter;

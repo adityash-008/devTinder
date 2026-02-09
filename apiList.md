@@ -3,11 +3,11 @@
 ## authRouter
 - POST /signup ->DONE
 - POST /login ->DONE
-- POST /logout
+- POST /logout ->DONE
 
 ## profileRouter
-- GET /profile/view
-- PATCH /profile/edit
+- GET /profile/view ->DONE
+- PATCH /profile/edit ->DONE
 - PATCH /profile/password
 
 ## connectionRequestRouter
