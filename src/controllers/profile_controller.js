@@ -1,4 +1,6 @@
 const {validateEditProfileData} = require('../utils/validation')
+const {User} = require('../models/user')
+const bcrypt = require('bcrypt')
 
 // viewUser API
 async function viewUserProfile(req,res) {
@@ -29,4 +31,26 @@ async function editUserProfile(req,res){
     }
 }
 
-module.exports = {viewUserProfile, editUserProfile}
+// editPassword API
+async function changeUserPassword(req,res){
+    try {
+        
+        const {oldPassword, newPassword} = req.body;
+        const user = req.user;
+        const isPasswordValid = await user.validatePassword(oldPassword)
+        if(!isPasswordValid) throw new Error("Enter Correct Password")
+
+        console.log(newPassword)
+        const passwordHash = await bcrypt.hash(newPassword,10);
+        
+        await user.updateOne({password: passwordHash});
+
+        res.status(200).send("Password Updated Successfully!")
+
+    } catch (err) {
+        res.status(400).send("ERROR: " + err.message);
+    }
+}
+
+
+module.exports = {viewUserProfile, editUserProfile, changeUserPassword}
