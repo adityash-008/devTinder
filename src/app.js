@@ -30,8 +30,8 @@ app.use('/profile',profileRouter)
 //Handle all /request routes
 app.use('/request',requestRouter)
 
-//Handle user feed
-app.use('/feed',userRouter)
+//Handle user feed,connections,request received
+app.use('/',userRouter)
 
 dbConnect()
     .then(() => {

@@ -4,10 +4,12 @@ const connectionRequestSchema = new mongoose.Schema({
     fromUserId: {
         type: mongoose.Schema.Types.ObjectId,
         required: true,
+        ref:"User"
     },
     toUserId: {
         type: mongoose.Schema.Types.ObjectId,
         required: true,
+        ref:"User"
     },
     status: {
         type: String,
@@ -18,6 +20,9 @@ const connectionRequestSchema = new mongoose.Schema({
         required: true
     }
 },{timestamps: true})
+
+//compound index
+connectionRequestSchema.index({ fromUserId: 1, toUserId: 1 });
 
 //A pre-middleware checks Is user sending request to himself
 connectionRequestSchema.pre("save",function(next){

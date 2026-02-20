@@ -45,7 +45,7 @@ const userschema = new mongoose.Schema({
     photoURL: {
         type: String,
         validate(value){
-            if(!validator.isURL(value)) throw new Error("Invalid URL!"+err)
+            if(!validator.isURL(value)) throw new Error("Invalid URL!"+error)
         }
     },
     about: {
@@ -57,6 +57,9 @@ const userschema = new mongoose.Schema({
         maxlength: 6,
     }
 },{timestamps: true})
+
+//Compound Indexes
+userschema.index({ firstName: 1, lastName: 1 });
 
  userschema.methods.getJWT = async function(){ //Do not use => function because of "this"
     const user = this
