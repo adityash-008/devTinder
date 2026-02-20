@@ -54,7 +54,7 @@ async function userLogIn(req,res){
             const expiryDate = new Date(Date.now() + 1000*60*60*7*24); //7 days
             res.cookie("token",token,{expires: expiryDate})
 
-            res.status(200).send("Successfully LoggedIn");
+            res.status(200).send(user);
         }
     } catch (err) {
         res.status(400).send("ERROR: " + err.message)

@@ -1,14 +1,23 @@
 const express = require("express");
 const dbConnect = require('./config/database');
 const cookieParser = require('cookie-parser');
+const cors = require('cors')
+
+const app = express();
 
 //All Routes
 const authRouter = require('./routes/auth_router.js')
 const profileRouter = require('./routes/profile_router.js')
 const requestRouter = require('./routes/request_router.js')
+const userRouter = require('./routes/user_router.js');
 
 
-const app = express();
+//Middlewares
+app.use(cors({
+  origin: "http://localhost:5173",
+  credentials: true
+}));
+
 app.use(cookieParser()) // Parse the req.cookies -> readable format
 app.use(express.json()) //JSON -> JS object
 
@@ -20,6 +29,9 @@ app.use('/profile',profileRouter)
 
 //Handle all /request routes
 app.use('/request',requestRouter)
+
+//Handle user feed
+app.use('/feed',userRouter)
 
 dbConnect()
     .then(() => {

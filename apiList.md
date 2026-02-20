@@ -16,6 +16,7 @@
 - POST /request/review/accepted/:requestId
 - POST /request/review/rejected/:requestId
 
+
 ## userRouter
 - GET /connections
 - GET /requests/received
